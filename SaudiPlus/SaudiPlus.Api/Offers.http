@@ -1,0 +1,10 @@
+POST http://localhost:5241/api/offers
+Content-Type: application/json
+
+{
+  "merchantId": "4a0b0d84-9325-47c1-9d85-d7ad1b70b601",
+  "title": "150% Discount on Electronics",
+  "discountPercentage": 150,
+  "startDate": "2026-12-01T00:00:00Z",
+  "endDate": "2026-12-31T23:59:59Z"
+}
