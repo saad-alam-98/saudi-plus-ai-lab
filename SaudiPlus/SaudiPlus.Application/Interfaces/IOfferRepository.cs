@@ -8,5 +8,10 @@ namespace SaudiPlus.Application.Interfaces
             Offer offer,
             CancellationToken cancellationToken = default
         );
+
+        Task<Offer?> GetByIdAsync(
+            Guid id,
+            CancellationToken cancellationToken = default
+        );
     }
 }

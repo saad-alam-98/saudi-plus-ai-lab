@@ -14,5 +14,19 @@ namespace SaudiPlus.UnitTests.Fakes
             SavedOffer = offer;
             return Task.CompletedTask;
         }
+
+        public Task<Offer?> GetByIdAsync(
+            Guid id,
+            CancellationToken cancellationToken = default
+        )
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var offer = SavedOffer?.Id == id
+                ? SavedOffer
+                : null;
+
+            return Task.FromResult(offer);
+        }
     }
 }

@@ -19,5 +19,14 @@ namespace SaudiPlus.Infrastructure.Repositories
 
             return Task.CompletedTask;
         }
+
+        public Task<Offer?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            Offers.TryGetValue(id, out var offer);
+
+            return Task.FromResult(offer);
+        }
     }
 }
