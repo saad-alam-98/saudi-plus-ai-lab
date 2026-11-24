@@ -1,8 +1,5 @@
 ﻿using SaudiPlus.Application.Offers.CreateOffer;
 using SaudiPlus.UnitTests.Fakes;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SaudiPlus.UnitTests.Application
 {

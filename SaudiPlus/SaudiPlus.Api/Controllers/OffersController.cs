@@ -30,10 +30,11 @@ namespace SaudiPlus.Api.Controllers
                 request,
                 cancellationToken);
 
-            return Created($"/api/offers/{offerId}", new
-            {
-                Id = offerId
-            });
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = offerId },
+                new { Id = offerId }
+            );
         }
 
         [HttpGet("{id:guid}")]

@@ -3,6 +3,7 @@ using SaudiPlus.Infrastructure.Repositories;
 using SaudiPlus.Api.ExceptionHandling;
 using SaudiPlus.Application.Offers.CreateOffer;
 using SaudiPlus.Application.Offers.GetOffer;
+using SaudiPlus.Api.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,11 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
+builder.Services.AddOptions<AIServiceOptions>()
+    .BindConfiguration(AIServiceOptions.SectionName)
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
 
 var app = builder.Build();
 
@@ -41,3 +47,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program
+{
+}

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using SaudiPlus.Domain.Exceptions;
 
 namespace SaudiPlus.Domain.Entities
 {
@@ -21,16 +20,16 @@ namespace SaudiPlus.Domain.Entities
         )
         {
             if (merchantId == Guid.Empty)
-                throw new ArgumentException("Merchant is required.");
+                throw new DomainValidationException("Merchant is required.");
 
             if (string.IsNullOrWhiteSpace(title))
-                throw new ArgumentException("Offer title is required.");
+                throw new DomainValidationException("Offer title is required.");
 
             if (discountPercentage <= 0 || discountPercentage > 100)
-                throw new ArgumentException("Discount must be between 0 and 100.");
+                throw new DomainValidationException("Discount must be between 0 and 100.");
 
             if (endDate <= startDate)
-                throw new ArgumentException("End date must be after start date.");
+                throw new DomainValidationException("End date must be after start date.");
 
             Id = Guid.NewGuid();
             MerchantId = merchantId;

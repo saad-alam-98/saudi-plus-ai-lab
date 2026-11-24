@@ -1,4 +1,5 @@
 ﻿using SaudiPlus.Domain.Entities;
+using SaudiPlus.Domain.Exceptions;
 
 namespace SaudiPlus.UnitTests.Domain
 {
@@ -19,7 +20,7 @@ namespace SaudiPlus.UnitTests.Domain
                 endDate
             );
 
-            Assert.Throws<ArgumentException>(action);
+            Assert.Throws<DomainValidationException>(action);
         }
     }
 }
