@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SaudiPlus.Application.Offers.GetOffer;
+using SaudiPlus.Application.Common.Models;
 using SaudiPlus.Application.Offers.CreateOffer;
+using SaudiPlus.Application.Offers.GetOffer;
+using SaudiPlus.Application.Offers.GetOffers;
 
 namespace SaudiPlus.Api.Controllers
 {
@@ -10,14 +12,17 @@ namespace SaudiPlus.Api.Controllers
     {
         private readonly CreateOfferService _createOfferService;
         private readonly GetOfferService _getOfferService;
+        private readonly GetOffersService _getOffersService;
 
         public OffersController(
             CreateOfferService createOfferService,
-            GetOfferService getOfferService
+            GetOfferService getOfferService,
+            GetOffersService getOffersService
         )
         {
             _createOfferService = createOfferService;
             _getOfferService = getOfferService;
+            _getOffersService = getOffersService;
         }
 
         [HttpPost]
@@ -50,6 +55,20 @@ namespace SaudiPlus.Api.Controllers
                 return NotFound();
 
             return Ok(offer);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<PaginatedResult<OfferResponse>>> GetAll(
+            [FromQuery] GetOffersQuery query,
+            CancellationToken cancellationToken
+        )
+        {
+            var offers = await _getOffersService.ExecuteAsync(
+                query,
+                cancellationToken
+            );
+
+            return Ok(offers);
         }
     }
 }

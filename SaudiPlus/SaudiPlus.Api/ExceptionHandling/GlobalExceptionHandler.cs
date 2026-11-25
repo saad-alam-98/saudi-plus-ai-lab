@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using SaudiPlus.Application.Common.Exceptions;
 using SaudiPlus.Domain.Exceptions;
-using Microsoft.AspNetCore.Diagnostics;
 
 namespace SaudiPlus.Api.ExceptionHandling
 {
@@ -27,13 +28,14 @@ namespace SaudiPlus.Api.ExceptionHandling
             var statusCode = exception switch
             {
                 DomainValidationException => StatusCodes.Status400BadRequest,
+                ApplicationValidationException => StatusCodes.Status400BadRequest,
 
                 _ => StatusCodes.Status500InternalServerError
             };
 
             httpContext.Response.StatusCode = statusCode;
 
-            if (exception is DomainValidationException)
+            if (exception is DomainValidationException or ApplicationValidationException)
             {
                 _logger.LogWarning(
                     "Domain validation failed: {ValidationMessage}",

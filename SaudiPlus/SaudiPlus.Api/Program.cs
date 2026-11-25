@@ -4,6 +4,7 @@ using SaudiPlus.Api.ExceptionHandling;
 using SaudiPlus.Application.Offers.CreateOffer;
 using SaudiPlus.Application.Offers.GetOffer;
 using SaudiPlus.Api.Options;
+using SaudiPlus.Application.Offers.GetOffers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IOfferRepository, InMemoryOfferRepository>();
 builder.Services.AddScoped<CreateOfferService>();
 builder.Services.AddScoped<GetOfferService>();
+builder.Services.AddScoped<GetOffersService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
