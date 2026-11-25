@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="SaudiPlus.Api/SaudiPlus.Api.csproj" />
+  <Project Path="SaudiPlus.Application/SaudiPlus.Application.csproj" />
+  <Project Path="SaudiPlus.Domain/SaudiPlus.Domain.csproj" />
+  <Project Path="SaudiPlus.Infrastructure/SaudiPlus.Infrastructure.csproj" />
+  <Project Path="SaudiPlus.IntegrationTests/SaudiPlus.IntegrationTests.csproj" />
+  <Project Path="SaudiPlus.UnitTests/SaudiPlus.UnitTests.csproj" />
+</Solution>
