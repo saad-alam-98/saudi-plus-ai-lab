@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.Mvc;
+using SaudiPlus.IntegrationTests;
 using SaudiPlus.Application.Offers.CreateOffer;
 using SaudiPlus.Application.Offers.GetOffer;
 using System;
@@ -10,12 +10,12 @@ using System.Text;
 
 namespace SaudiPlus.IntegrationTests.Controllers
 {
-    public class OffersControllerTests : IClassFixture<WebApplicationFactory<Program>>
+    public class OffersControllerTests : IClassFixture<InMemoryOfferWebApplicationFactory>
     {
         private readonly HttpClient _client;
 
         public OffersControllerTests(
-            WebApplicationFactory<Program> factory
+            InMemoryOfferWebApplicationFactory factory
         )
         {
             _client = factory.CreateClient();

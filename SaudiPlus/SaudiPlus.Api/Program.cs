@@ -1,5 +1,7 @@
 using SaudiPlus.Application.Interfaces;
 using SaudiPlus.Infrastructure.Repositories;
+using SaudiPlus.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using SaudiPlus.Api.ExceptionHandling;
 using SaudiPlus.Application.Offers.CreateOffer;
 using SaudiPlus.Application.Offers.GetOffer;
@@ -9,7 +11,9 @@ using SaudiPlus.Application.Offers.GetOffers;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddScoped<IOfferRepository, InMemoryOfferRepository>();
+builder.Services.AddDbContext<SaudiPlusDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IOfferRepository, PostgresOfferRepository>();
 builder.Services.AddScoped<CreateOfferService>();
 builder.Services.AddScoped<GetOfferService>();
 builder.Services.AddScoped<GetOffersService>();

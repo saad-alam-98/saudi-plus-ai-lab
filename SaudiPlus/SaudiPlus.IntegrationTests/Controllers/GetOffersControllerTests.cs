@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc.Testing;
+using SaudiPlus.IntegrationTests;
 using SaudiPlus.Application.Common.Models;
 using SaudiPlus.Application.Offers.CreateOffer;
 using SaudiPlus.Application.Offers.GetOffer;
@@ -12,7 +12,7 @@ public class GetOffersControllerTests
     [Fact]
     public async Task CollectionFiltersSortsAndPaginates()
     {
-        using var factory = new WebApplicationFactory<Program>();
+        using var factory = new InMemoryOfferWebApplicationFactory();
         using var client = factory.CreateClient();
         var prefix = $"test-{Guid.NewGuid():N}-";
         var date = DateTime.UtcNow;
@@ -74,7 +74,7 @@ public class GetOffersControllerTests
     [InlineData("minDiscount=abc")]
     public async Task InvalidParametersReturnBadRequest(string parameters)
     {
-        using var factory = new WebApplicationFactory<Program>();
+        using var factory = new InMemoryOfferWebApplicationFactory();
         using var client = factory.CreateClient();
         var response = await client.GetAsync("/api/offers?" + parameters);
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
