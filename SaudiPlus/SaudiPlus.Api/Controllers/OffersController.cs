@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using SaudiPlus.Application.Common.Models;
 using SaudiPlus.Application.Offers.CreateOffer;
 using SaudiPlus.Application.Offers.GetOffer;
@@ -25,6 +26,7 @@ namespace SaudiPlus.Api.Controllers
             _getOffersService = getOffersService;
         }
 
+        [Authorize(Policy = "CanCreateOffer")]
         [HttpPost]
         public async Task<IActionResult> Create(
             [FromBody] CreateOfferRequest request,

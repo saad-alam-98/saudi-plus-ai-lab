@@ -33,3 +33,23 @@ On a separate temporary PostgreSQL database with 100,000 synthetic offers, one w
 | First page, discount descending | 13.962 ms | 0.106 ms |
 
 The count retained a sequential scan and saw no meaningful benefit. The page query changed from a sequential scan plus sort to an index scan; shared buffer hits fell from 1,397 to 23. Measurements used warm cached data on one local machine, a synthetic distribution, and only the first page. Execution times exclude API and network overhead; other filters, deeper pages, and production-sized data may behave differently.
+
+## Identity roles
+
+After applying migrations, initialize the `Customer`, `Merchant`, and `Administrator` roles with `ASPNETCORE_ENVIRONMENT=Development` and:
+
+```powershell
+dotnet run --project SaudiPlus/SaudiPlus.Api/SaudiPlus.Api.csproj --no-launch-profile -- --initialize-roles
+```
+
+This command is repeatable and exits without starting the API. It does not create users or credentials.
+
+## Authentication
+
+`POST /api/auth/register` accepts email and password and assigns Customer on the server. `POST /api/auth/login` returns a signed access token and its UTC expiry. Access tokens last 15 minutes. Five failed password attempts trigger Identity's five-minute lockout.
+
+Configure `Jwt:SigningKey` in API User Secrets using a cryptographically random key of at least 32 bytes. Never place it in appsettings or source control. JWT issuer defaults to `SaudiPlus` and audience to `SaudiPlus.Api`; both can be configured under `Jwt`. Swagger provides Bearer authentication. Existing offer endpoints remain public.
+
+## Offer authorization and ownership
+
+`POST /api/offers` requires a Bearer token with the Merchant or Administrator role. Offer reads remain public. A Merchant may create offers only for a merchant they belong to; an Administrator may create for any existing merchant. Ownership is checked again in the Application service, so direct service calls follow the same rule. Merchant and membership records are provisioned through trusted internal code; there is no public provisioning endpoint. Existing offers have no merchant foreign key because their historical merchant IDs were not provisioned as merchant records.

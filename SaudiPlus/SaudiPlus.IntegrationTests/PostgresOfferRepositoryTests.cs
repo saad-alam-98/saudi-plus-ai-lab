@@ -56,16 +56,20 @@ public class PostgresOfferRepositoryTests
         var slashTitle = prefix + "\\literal";
         var start = DateTime.UtcNow;
         var expected = new[] { ("C", 20m), ("A", 40m), ("B", 40m) };
-        using (var first = CreateFactory())
-        using (var client = first.CreateClient())
+        await using (var seed = new SaudiPlusDbContext(options))
         {
             foreach (var (suffix, discount) in expected)
-            {
-                var response = await client.PostAsJsonAsync("/api/offers", new CreateOfferRequest(Guid.NewGuid(), prefix + suffix, discount, start, start.AddDays(1)));
-                Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-            }
-            Assert.Equal(HttpStatusCode.Created, (await client.PostAsJsonAsync("/api/offers", new CreateOfferRequest(Guid.NewGuid(), decoy, 50m, start, start.AddDays(1)))).StatusCode);
-            Assert.Equal(HttpStatusCode.Created, (await client.PostAsJsonAsync("/api/offers", new CreateOfferRequest(Guid.NewGuid(), slashTitle, 30m, start, start.AddDays(1)))).StatusCode);
+                seed.Offers.Add(new SaudiPlus.Domain.Entities.Offer(Guid.NewGuid(), prefix + suffix, discount, start, start.AddDays(1)));
+            seed.Offers.Add(new SaudiPlus.Domain.Entities.Offer(Guid.NewGuid(), decoy, 50m, start, start.AddDays(1)));
+            seed.Offers.Add(new SaudiPlus.Domain.Entities.Offer(Guid.NewGuid(), slashTitle, 30m, start, start.AddDays(1)));
+            await seed.SaveChangesAsync();
+        }
+        using (var first = CreateFactory())
+        using (var firstClient = first.CreateClient())
+        {
+            var persisted = await firstClient.GetFromJsonAsync<PaginatedResult<OfferResponse>>(
+                $"/api/offers?search={Uri.EscapeDataString(prefix)}");
+            Assert.Equal(4, persisted!.TotalCount);
         }
 
         using var second = CreateFactory();

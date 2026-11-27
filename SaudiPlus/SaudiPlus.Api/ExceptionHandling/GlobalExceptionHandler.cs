@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using SaudiPlus.Application.Common.Exceptions;
 using SaudiPlus.Domain.Exceptions;
@@ -27,6 +27,8 @@ namespace SaudiPlus.Api.ExceptionHandling
         {
             var statusCode = exception switch
             {
+                AuthenticationRequiredException => StatusCodes.Status401Unauthorized,
+                OfferForbiddenException => StatusCodes.Status403Forbidden,
                 DomainValidationException => StatusCodes.Status400BadRequest,
                 ApplicationValidationException => StatusCodes.Status400BadRequest,
 
@@ -56,10 +58,10 @@ namespace SaudiPlus.Api.ExceptionHandling
                     ProblemDetails = new ProblemDetails
                     {
                         Status = statusCode,
-                        Title = statusCode == 400
+                        Title = statusCode == 401 ? "Unauthorized" : statusCode == 403 ? "Forbidden" : statusCode == 400
                         ? "Invalid request"
                         : "Internal server error",
-                        Detail = statusCode == 400
+                        Detail = statusCode == 401 ? "Authentication required." : statusCode == 403 ? "Access denied." : statusCode == 400
                         ? exception.Message
                         : "An unexpected error occurred."
                     }
